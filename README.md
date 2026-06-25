@@ -16,6 +16,7 @@ Egret UI Editor是一款独立的UI编辑器，其主要功能是针对 `Egret` 
 
 ### 开发构建
 ```bash
+# node v14.21.3 (npm v6.14.18)
 # 安装依赖
 $ npm run setup-mac  # macOS 系统
 # 或
