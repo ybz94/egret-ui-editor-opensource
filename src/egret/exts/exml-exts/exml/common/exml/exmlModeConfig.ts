@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import { parseClassName } from '../utils/eui/exmls';
 import { ClassNode } from '../project/syntaxNodes';
 import { IAssetsAdapter } from '../assets/adapters';
+import { WebFontLoader } from 'egret/workbench/parts/assets/material/common/WebFontLoader';
 
 /**
  * ExmlModel的配置，原项目中的EUISingleConfig
@@ -59,6 +60,9 @@ export class ExmlModelConfig {
 		this._runtime = runtime;
 		this._runtime.getRuntime().then(runtime => {
 			this.runtimeApi = runtime;
+			// 将资源库中的 ttf 字体注册进运行时 iframe 文档与主文档，保证设计画布能按 fontFamily 渲染
+			WebFontLoader.ensureTTFFonts(runtime.document);
+			WebFontLoader.ensureTTFFonts(document);
 			this.exmlConfigInRuntime = new this.runtimeApi.eui.sys.EXMLConfig();
 			this.runtimeApi.registerTheme((hostComponent) => {
 				return this.getDefaultSkinName(hostComponent);

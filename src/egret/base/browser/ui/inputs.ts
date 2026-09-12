@@ -3,6 +3,7 @@ import { addClass } from 'egret/base/common/dom';
 import { Emitter, Event } from 'egret/base/common/event';
 import { IUIBase, getTargetElement } from './common';
 import { trim } from '../../common/strings';
+import { isArithmeticExpression, evalArithmetic } from '../../common/numbers';
 import { ContextView, AnchorAlignment } from './contextview';
 import * as dom from 'vs/base/browser/dom';
 import { renderFormattedText, renderText, FormattedTextRenderOptions } from 'vs/base/browser/formattedTextRenderer';
@@ -546,6 +547,10 @@ export class NumberInput extends TextInput {
 		if (value.length == 0) {
 			return '';
 		}
+		//算术表达式的输入中间态（如 "50/2"、"(3+"），原样放行，待提交时统一求值
+		if (isArithmeticExpression(value)) {
+			return value;
+		}
 		let tmpValue: string = '';
 		//先过滤一遍非法字符，且只保留一个小数点
 		let hasPoint: boolean = false;
@@ -614,6 +619,15 @@ export class NumberInput extends TextInput {
 
 	}
 	private doChangedFilter(value: string): string {
+		value = trim(value);
+		//提交时对算术表达式（如 "50/2"）求值，将结果作为新值重新走一遍提交管线（值域校验等）
+		if (value.length > 0 && isArithmeticExpression(value)) {
+			const result = evalArithmetic(value);
+			if (!isNaN(result)) {
+				//与鼠标拖拽调节保持一致的千分位精度
+				return this.doChangedFilter(Math.round(result * 1000) / 1000 + '');
+			}
+		}
 		value = this.doChangingFilter(value);
 		if (!value) {
 			return '';

@@ -643,4 +643,23 @@ export class ResLibData {
 		}
 		return fonts;
 	}
+
+	/**
+	 * ttf 字体资源（name 用于 fontFamily，url 为本地文件路径）
+	 */
+	public static getTTFFonts(): { name: string, url: string }[] {
+		const fonts: { name: string, url: string }[] = [];
+		const resInfos = ResLibData.caches;
+		let obj: any;
+		for (obj in resInfos) {
+			const foss: Array<any> = <any>resInfos[obj];
+			for (let i: number = 0; i < foss.length; i++) {
+				if (foss[i]['type'] === ResType.TYPE_TTF) {
+					// locolUrl 去除路径参数，只用于加载
+					fonts.push({ name: foss[i]['name'], url: foss[i]['locolUrl'] });
+				}
+			}
+		}
+		return fonts;
+	}
 }

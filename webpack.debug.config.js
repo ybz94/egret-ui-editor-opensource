@@ -1,6 +1,5 @@
 let path = require('path')
 let fs = require('fs')
-let htmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -120,21 +119,11 @@ module.exports = {
 			filename: "[name].css",
 			chunkFilename: "[id].css"
 		}),
-		new htmlPlugin({
-			minify: false,
-			hash: false,
-			filename: './egret/workbench/electron-browser/bootstrap/index.html',
-			template: './egret/workbench/electron-browser/bootstrap/index.html',
-			chunks: []
-		}),
-		new htmlPlugin({
-			minify: false,
-			hash: false,
-			filename: './egret/workbench/electron-browser/bootstrap/resdepot.html',
-			template: './egret/workbench/electron-browser/bootstrap/resdepot.html',
-			chunks: []
-		}),
+		// html-webpack-plugin@4 与 webpack 5 在子编译哈希阶段存在兼容性 bug，
+		// 且这两个模板 chunks:[] 无任何插值，直接复制即可
 		new CopyWebpackPlugin([
+			{ from: './egret/workbench/electron-browser/bootstrap/index.html', to: './egret/workbench/electron-browser/bootstrap/index.html' },
+			{ from: './egret/workbench/electron-browser/bootstrap/resdepot.html', to: './egret/workbench/electron-browser/bootstrap/resdepot.html' },
 			{ from: '../resources/', to: './egret/workbench/electron-browser/bootstrap/resources/' },
 			{ from: './egret/workbench/services/files/watcher/win32/CodeHelper.exe', to: './egret/workbench/services/files/watcher/win32/CodeHelper.exe' }
 		]),

@@ -23,6 +23,9 @@ export class ResType {
 	//字体
 	public static TYPE_FONT: string;
 
+	//ttf 字体
+	public static TYPE_TTF: string;
+
 	//声音
 	public static TYPE_SOUND: string;
 	//资源扩展
@@ -39,6 +42,9 @@ export class ResType {
 
 	//字体扩展
 	public static FONT_TYPE_EXTS: Array<string>;
+
+	//ttf 扩展
+	public static TTF_TYPE_EXTS: Array<string>;
 
 	//json 扩展
 	public static JSON_TYPE_EXTS: Array<string>;
@@ -57,6 +63,7 @@ ResType.TYPE_TEXT = 'text';
 ResType.TYPE_JSON = 'json';
 ResType.TYPE_SHEET = 'sheet';
 ResType.TYPE_FONT = 'font';
+ResType.TYPE_TTF = 'ttf';
 ResType.TYPE_SOUND = 'sound';
 
 ResType.DBBIN_TYPE_EXTS = ['dbbin'];
@@ -64,6 +71,7 @@ ResType.IMAGE_TYPE_EXTS = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'svg'];
 ResType.SOUND_TYPE_EXTS = ['mp3', 'wav', 'm4a'];
 ResType.TEXT_TYPE_EXTS = ['txt'];
 ResType.FONT_TYPE_EXTS = ['fnt'];
+ResType.TTF_TYPE_EXTS = ['ttf'];
 ResType.JSON_TYPE_EXTS = ['json'];
 
 ResType.SOUND_TYPE = ['music', 'effect'];

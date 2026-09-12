@@ -12,6 +12,8 @@ import { IDropDownTextDataSource } from 'egret/base/browser/ui/dropdowns';
 import { EgretProjectModel } from 'egret/exts/exml-exts/exml/common/project/egretProject';
 import { IUIBase } from 'egret/base/browser/ui/common';
 import { IEgretProjectService } from 'egret/exts/exml-exts/project';
+import { ResLibData } from 'egret/workbench/parts/assets/material/common/ResLibData';
+import { WebFontLoader } from 'egret/workbench/parts/assets/material/common/WebFontLoader';
 import { toHexString, UserValue, getProperty, getSameKeyValue, DefaultValue, toHexNumber, setPropertyStr, setPropertyNum, setPropertyBool } from 'egret/workbench/parts/properties/common/properties';
 
 import '../../media/propertyView.css';
@@ -258,6 +260,24 @@ export class LabelPart extends BasePart {
 			}
 			const project = this.egretProjectService.projectModel;
 			let fonts = getFonts(project);
+			// 合并用户资源中的 ttf 字体（ResLibData.caches 随资源库动态变化，不能进模块级缓存）
+			fonts = fonts.concat();
+			const ttfFonts = ResLibData.getTTFFonts();
+			for (let i = 0; i < ttfFonts.length; i++) {
+				const ttfFont = ttfFonts[i].name;
+				let exists = false;
+				for (let j = 0; j < fonts.length; j++) {
+					if (fonts[j].id == ttfFont) {
+						exists = true;
+						break;
+					}
+				}
+				if (!exists) {
+					fonts.push({ id: ttfFont, data: ttfFont });
+				}
+			}
+			// 主文档也注册一份，保证画布被移入主文档后 fillText 仍能解析
+			WebFontLoader.ensureTTFFonts(document);
 			let has = false;
 			if (!currentFont) {
 				has = true;
