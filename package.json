@@ -71,6 +71,8 @@
 		"directories": {
 			"output": "../dist"
 		},
+		"electronDist": "node_modules/electron/dist",
+		"electronVersion": "11.2.0",
 		"asar": true,
 		"mac": {
 			"category": "Developer Tools",
