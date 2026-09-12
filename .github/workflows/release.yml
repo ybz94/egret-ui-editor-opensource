@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # lockfile 为 v3 格式，须使用 npm 9+；老 webpack 依赖 md4 哈希，须开启 legacy provider
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (webpack release)
+        run: npm run publish
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      - name: Package (electron-builder win)
+        run: npm run dist-win
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      # electron-builder 输出目录为仓库上级 ../dist（见 package.json build.directories.output）
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ../dist/*.exe
+          generate_release_notes: true
